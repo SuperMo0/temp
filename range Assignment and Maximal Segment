@@ -1,0 +1,71 @@
+#define _GLIBCXX_FILESYSTEM
+#include <bits/stdc++.h>
+#define IOS ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define F first
+#define S second
+#define int long long
+using namespace std;
+
+int inf=1<<18;
+vector<int> tree(inf),suf(inf),prf(inf),mx(inf),op(inf,INT_MIN),sum(inf);
+int size;
+
+void change(int node,int value,int l,int r)
+{
+    op[node]=value;
+    int sz=r-l+1;
+    sum[node]=value*sz;
+    if(value>0)
+    {
+        prf[node]=sz*value;
+        suf[node]=sz*value;
+        mx[node]=sz*value;
+    }
+    else
+    {
+        prf[node]=suf[node]=mx[node]=0;
+    }
+}
+void propogate(int node,int l,int r)
+{
+    int mid=(l+r)/2;
+    change(node*2+1,op[node],l,mid);
+    change(node*2+2,op[node],mid+1,r);
+    op[node]=INT_MIN;
+}
+
+void update(int l,int r,int node,int s,int e,int value)
+{
+    if(l>=s && r<=e)
+    {
+        change(node,value,l,r);
+        return ;
+    }
+    if(l>e || r<s)
+        return ;
+
+    if(op[node]!=INT_MIN)
+    propogate(node,l,r);
+
+    int mid=(l+r)/2;
+    update(l,mid,node*2+1,s,e,value);
+    update(mid+1,r,node*2+2,s,e,value);
+
+    suf[node]=max(sum[node*2+2]+suf[node*2+1],suf[node*2+2]);
+    prf[node]=max(sum[node*2+1]+prf[node*2+2],prf[node*2+1]);
+    sum[node]=sum[node*2+1]+sum[node*2+2];
+    mx[node]=max({mx[node*2+1],mx[node*2+2],suf[node*2+1]+prf[node*2+2]});
+}
+signed main()
+{
+    IOS
+    int n,q;
+    cin>>n>>q;
+    int l,r,v;
+    for(int i=0;i<q;i++)
+    {
+        cin>>l>>r>>v;
+        update(0,(1<<17)-1,0,l,r-1,v);
+        cout<<mx[0]<<"\n";
+    }
+}
