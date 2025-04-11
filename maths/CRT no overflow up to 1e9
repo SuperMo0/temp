@@ -1,3 +1,4 @@
+# https://codeforces.com/blog/entry/61290
 #include<bits/stdc++.h>
 using namespace std;
 const int N = 20;
