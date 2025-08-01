@@ -98,6 +98,42 @@ bool findCircle(point a, point b, point c, pair<double, point>& circle) {
     return 1;
 }
 
+
+
+bool check_bounding_box(point a,point b,point c,point d)
+{
+    if((max(a.x,b.x) <min(c.x,d.x))  || (max(a.y,b.y) < min(c.y,d.y)) )return false;
+    swap(a,c);
+    swap(b,d);
+    if( (max(a.x,b.x) <min(c.x,d.x))   || (max(a.y,b.y) < min(c.y,d.y)) )return false;
+
+    return true;
+}
+
+
+void get_2segments_intersect(point a,point b,point c,point d)
+{
+
+long double A0,B0,C0,A1,B1,C1;
+                A0 = a.y - b.y;
+                B0 = b.x - a.x;
+                C0 = A0 * a.x + B0 * a.y;
+                A1=c.y-d.y;
+                B1=d.x-c.x;
+                C1=A1*c.x+B1*c.y;
+                long double x=(C0*B1-C1*B0)/((A0*B1)-(A1*B0));
+                if(B0!=0)
+                {
+                    long double y=(C0-A0*x)/B0;
+                    cout<<fixed<<setprecision(2)<<x<<" "<<y<<"\n";
+                }
+                else if(B1!=0)
+                {
+                    long double y=(C1-A1*x)/B1;
+                    cout<<fixed<<setprecision(2)<<x<<" "<<y<<"\n";
+                }
+}
+
 ----------------------------------------------------------------
 
 #include <bits/stdc++.h>
